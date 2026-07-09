@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decimal Operations - Interactive Practice Worksheet</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --container-bg: #ffffff;
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --correct-color: #10b981;
+            --correct-bg: #ecfdf5;
+            --incorrect-color: #ef4444;
+            --incorrect-bg: #fef2f2;
+            --accent-yellow: #fef08a;
+            --header-bg: #fefcbf;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 900px;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 2px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #fef8c3;
+            border-bottom: 2px solid #fef08a;
+            padding: 24px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: #713f12;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: #a16207;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .student-info {
+            padding: 16px 24px;
+            background: #f1f5f9;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+        }
+
+        .student-info input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .student-info input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .summary-card {
+            display: none;
+            margin: 20px 24px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            background: #f0fdf4;
+            border: 2px solid #bbf7d0;
+        }
+
+        .summary-card.show {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .summary-card h2 {
+            color: #166534;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .summary-card .score {
+            font-size: 32px;
+            font-weight: 800;
+            color: #15803d;
+            margin-bottom: 12px;
+        }
+
+        .share-btn {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .share-btn:hover {
+            background-color: #15803d;
+        }
+
+        .worksheet-grid {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 40px;
+        }
+
+        @media (max-width: 680px) {
+            .worksheet-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+
+        .problem-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: #fafafa;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .problem-row:hover {
+            background: #f4f4f5;
+        }
+
+        .expression {
+            font-size: 16px;
+            font-weight: 600;
+            color: #334155;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .answer-input {
+            width: 110px;
+            padding: 8px 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            outline: none;
+            color: var(--text-main);
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .answer-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Verification States */
+        .problem-row.correct {
+            background-color: var(--correct-bg);
+            border-color: #a7f3d0;
+        }
+
+        .problem-row.correct .answer-input {
+            border-color: var(--correct-color);
+            background-color: white;
+            color: var(--correct-color);
+        }
+
+        .problem-row.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: #fecaca;
+        }
+
+        .problem-row.incorrect .answer-input {
+            border-color: var(--incorrect-color);
+            background-color: white;
+            color: var(--incorrect-color);
+        }
+
+        .feedback-icon {
+            margin-left: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            display: none;
+        }
+
+        .problem-row.correct .feedback-icon {
+            display: inline;
+            color: var(--correct-color);
+        }
+
+        .problem-row.incorrect .feedback-icon {
+            display: inline;
+            color: var(--incorrect-color);
+        }
+
+        .actions {
+            padding: 24px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            background: #f8fafc;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+        }
+
+        .submit-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <header>
+        <h1>Decimal Operations Practice</h1>
+        <p>Fill in your answers carefully. Check your results at the end!</p>
+    </header>
+
+    <div class="student-info">
+        <input type="text" id="studentName" placeholder="Enter Student Name to Track Progress..." required />
+    </div>
+
+    <div id="summaryCard" class="summary-card">
+        <h2 id="summaryTitle">Practice Completed!</h2>
+        <div class="score" id="scoreDisplay">0 / 30</div>
+        <p id="summaryText" style="color: var(--text-muted); margin-bottom: 12px; font-size: 14px;"></p>
+        <button class="share-btn" onclick="copyResults()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            Copy Text Report to Share
+        </button>
+    </div>
+
+    <form id="worksheetForm" onsubmit="evaluateWorksheet(event)">
+        <div class="worksheet-grid">
+            <!-- Left Column (1-15) -->
+            <div id="leftColumn" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            <!-- Right Column (16-30) -->
+            <div id="rightColumn" style="display: flex; flex-direction: column; gap: 12px;"></div>
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="submit-btn" id="actionBtn">Check My Work & Generate Score</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const problems = [
+        { id: 1, exp: "0.4 + 1.82", ans: "2.22" },
+        { id: 2, exp: "9.0 - 6.99", ans: "2.01" },
+        { id: 3, exp: "4 × 0.2", ans: "0.8" },
+        { id: 4, exp: "48 ÷ 0.8", ans: "60" },
+        { id: 5, exp: "3.5 + 6.7", ans: "10.2" },
+        { id: 6, exp: "19.1 - 5.3", ans: "13.8" },
+        { id: 7, exp: "8.4 ÷ 0.7", ans: "12" },
+        { id: 8, exp: "1.1 × 5", ans: "5.5" },
+        { id: 9, exp: "12.3 + 15.9", ans: "28.2" },
+        { id: 10, exp: "20.05 - 6.6", ans: "13.45" },
+        { id: 11, exp: "9 × 0.05", ans: "0.45" },
+        { id: 12, exp: "3.2 ÷ 4", ans: "0.8" },
+        { id: 13, exp: "0.02 - 0.003", ans: "0.017" },
+        { id: 14, exp: "17.9 + 19.16", ans: "37.06" },
+        { id: 15, exp: "0.5 × 0.8", ans: "0.4" },
+        { id: 16, exp: "7.2 + 10.09", ans: "17.29" },
+        { id: 17, exp: "100 - 25.46", ans: "74.54" },
+        { id: 18, exp: "0.6 × 0.3", ans: "0.18" },
+        { id: 19, exp: "5.4 ÷ 9", ans: "0.6" },
+        { id: 20, exp: "2.64 + 7.8", ans: "10.44" },
+        { id: 21, exp: "65.8 - 20.06", ans: "45.74" },
+        { id: 22, exp: "0.56 ÷ 8", ans: "0.07" },
+        { id: 23, exp: "2.5 × 7", ans: "17.5" },
+        { id: 24, exp: "88.44 + 10.88", ans: "99.32" },
+        { id: 25, exp: "0.15 × 4", ans: "0.6" },
+        { id: 26, exp: "0.13 × 0.02", ans: "0.0026" },
+        { id: 27, exp: "10.8 ÷ 0.9", ans: "12" },
+        { id: 28, exp: "12.05 - 3.007", ans: "9.043" },
+        { id: 29, exp: "0.18 ÷ 0.3", ans: "0.6" },
+        { id: 30, exp: "0.7²", ans: "0.49" }
+    ];
+
+    function loadProblems() {
+        const leftCol = document.getElementById('leftColumn');
+        const rightCol = document.getElementById('rightColumn');
+
+        problems.forEach((p, idx) => {
+            const rowHTML = `
+                <div class="problem-row" id="row-${p.id}">
+                    <span class="expression">${p.id}) ${p.exp} =</span>
+                    <div class="input-wrapper">
+                        <input type="text" class="answer-input" id="input-${p.id}" autocomplete="off" placeholder="...">
+                        <span class="feedback-icon" id="icon-${p.id}"></span>
+                    </div>
+                </div>
+            `;
+            if (idx < 15) {
+                leftCol.innerHTML += rowHTML;
+            } else {
+                rightCol.innerHTML += rowHTML;
+            }
+        });
+    }
+
+    let globalScoreText = "";
+
+    function evaluateWorksheet(event) {
+        event.preventDefault();
+        let score = 0;
+        const name = document.getElementById('studentName').value.trim() || "Student";
+
+        problems.forEach(p => {
+            const inputEl = document.getElementById(`input-${p.id}`);
+            const rowEl = document.getElementById(`row-${p.id}`);
+            const iconEl = document.getElementById(`icon-${p.id}`);
+            const userAns = inputEl.value.trim();
+
+            if (userAns === p.ans) {
+                score++;
+                rowEl.className = "problem-row correct";
+                iconEl.innerHTML = "✓";
+            } else {
+                rowEl.className = "problem-row incorrect";
+                iconEl.innerHTML = "✗";
+            }
+        });
+
+        const pct = Math.round((score / problems.length) * 100);
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const summaryCard = document.getElementById('summaryCard');
+        const summaryText = document.getElementById('summaryText');
+
+        scoreDisplay.innerText = `${score} / ${problems.length} (${pct}%)`;
+        summaryText.innerText = `Great job practicing, ${name}! Review your highlighted worksheet items below. You can screenshot this panel or use the copy button below to send your text summary directly to your teacher.`;
+        
+        summaryCard.className = "summary-card show";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        globalScoreText = `📚 Decimal Operations Practice Report\n👤 Student Name: ${name}\n🎯 Score: ${score}/30 (${pct}%)\n📅 Completed Successfully`;
+    }
+
+    function copyResults() {
+        if (!globalScoreText) {
+            alert("Please submit your answers first to generate your report!");
+            return;
+        }
+        navigator.clipboard.writeText(globalScoreText.replace(/\n/g, '\n')).then(() => {
+            alert("Practice summary report copied to clipboard! You can now paste and send it to your teacher via message or email.");
+        }).catch(err => {
+            alert("Could not automatically copy code. Please take a screenshot of your score box instead!");
+        });
+    }
+
+    window.onload = loadProblems;
+</script>
+
+</body>
+</html>
